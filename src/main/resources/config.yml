@@ -1,0 +1,21 @@
+# Cubicore plugin configuration
+# Authored by Jenya705
+
+# world layout on 'worlds' command
+worldLayout: '%world% &7- &e%players%'
+
+# player layout on 'worlds' command
+playerLayout: '&e%player% &7- %world%'
+
+# world is not exist on 'worlds' command
+worldNotExist: '&c%world% is not exist'
+
+# player is not online on 'worlds' command
+playerNotExist: '&c%player% is not online'
+
+# worlds localized name
+worlds:
+  minecraft:overworld: '&aOverworld'
+  minecraft:the_nether: '&cNether'
+  minecraft:the_end: '&5End'
+

@@ -1,0 +1,16 @@
+name: Cubicore
+version: @version@
+main: com.github.jenya705.cubicore.Cubicore
+api-version: 1.17
+authors: [ Jenya705 ]
+description: Core plugin for Cubic World
+commands:
+  worlds:
+    permission: cubicore.worlds
+permissions:
+  cubicore.*:
+    default: op
+    children:
+      - cubicore.worlds
+  cubicore.worlds:
+    default: true
