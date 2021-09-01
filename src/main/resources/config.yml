@@ -19,3 +19,10 @@ worlds:
   minecraft:the_nether: '&cNether'
   minecraft:the_end: '&5End'
 
+# chat formats
+chat:
+  global: "&7{2}&l< &r{0} &7{2}&l>&r {1}"
+  local: "&7L {2}&l< &r{0} &7{2}&l>&r {1}"
+
+color:
+  notValid: "Not valid color"

@@ -5,6 +5,8 @@ api-version: 1.17
 authors: [ Jenya705 ]
 description: Core plugin for Cubic World
 commands:
+  color:
+    permission: cubicore.color
   worlds:
     permission: cubicore.worlds
 permissions:
@@ -12,5 +14,8 @@ permissions:
     default: op
     children:
       - cubicore.worlds
+      - cubicore.color
   cubicore.worlds:
     default: true
+  cubicore.color:
+    default: op

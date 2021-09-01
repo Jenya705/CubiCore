@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Cubicore extends JavaPlugin {
@@ -15,7 +16,9 @@ public final class Cubicore extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         saveDefaultConfig();
+        getServer().getPluginManager().registerEvents(new ChatHandler(this), this);
         setCommand("worlds", new WorldsCommand());
+        setCommand("color", new ColorCommand(this));
     }
 
     @Override
