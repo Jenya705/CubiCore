@@ -26,12 +26,7 @@ public class ChatHandler implements Listener {
     @EventHandler
     public void chat(AsyncChatEvent event) {
         Player player = event.getPlayer();
-        String playerColor = player.hasPermission("chat.color") ?
-                player.getPersistentDataContainer().getOrDefault(
-                        NamespacedKey.fromString("chat_color", cubicore),
-                        PersistentDataType.STRING,
-                        ""
-                ) : "";
+        String playerColor = cubicore.getColors().getOrDefault(player.getUniqueId(), "");
         String legacyMessage = LegacyComponentSerializer
                 .legacySection()
                 .serialize(event.message())
@@ -39,13 +34,15 @@ public class ChatHandler implements Listener {
                 .replaceAll("&", "");
         boolean isLocal = !legacyMessage.startsWith("!");
         if (isLocal) {
+            int radius = cubicore.getConfig().getInt("chat.radius");
             Set<Audience> viewers = event
                     .viewers()
                     .stream()
                     .filter(it -> {
                         if (!(it instanceof Player anotherPlayer)) return true;
-                        return Math.abs(anotherPlayer.getLocation().getX() - player.getLocation().getX()) < 100 &&
-                                Math.abs(anotherPlayer.getLocation().getZ() - player.getLocation().getZ()) < 100;
+                        return anotherPlayer.getWorld() == player.getWorld() &&
+                                Math.abs(anotherPlayer.getLocation().getX() - player.getLocation().getX()) < radius &&
+                                Math.abs(anotherPlayer.getLocation().getZ() - player.getLocation().getZ()) < radius;
                     })
                     .collect(Collectors.toSet());
             event.viewers().clear();
