@@ -32,7 +32,7 @@ public class ChatHandler implements Listener {
                 .serialize(event.message())
                 .replaceAll("\\{\\d}", "")
                 .replaceAll("&", "");
-        boolean isLocal = !legacyMessage.startsWith("!");
+        boolean isLocal = cubicore.getConfig().getInt("chat.radius") > 0 && !legacyMessage.startsWith("!");
         if (isLocal) {
             int radius = cubicore.getConfig().getInt("chat.radius");
             Set<Audience> viewers = event
