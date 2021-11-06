@@ -32,8 +32,8 @@ public class ChatHandler implements Listener {
                 .serialize(event.message())
                 .replaceAll("\\{\\d}", "")
                 .replaceAll("&", "");
+        boolean isLocal = !legacyMessage.startsWith("!");
         if (cubicore.getConfig().getInt("chat.radius") <= 0) {
-            boolean isLocal = !legacyMessage.startsWith("!");
             if (isLocal) {
                 int radius = cubicore.getConfig().getInt("chat.radius");
                 Set<Audience> viewers = event
@@ -52,6 +52,9 @@ public class ChatHandler implements Listener {
             else {
                 legacyMessage = legacyMessage.substring(1);
             }
+        }
+        else {
+            isLocal = false;
         }
         Component endMessage = LegacyComponentSerializer
                 .legacyAmpersand()
