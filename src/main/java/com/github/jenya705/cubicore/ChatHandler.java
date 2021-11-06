@@ -32,24 +32,26 @@ public class ChatHandler implements Listener {
                 .serialize(event.message())
                 .replaceAll("\\{\\d}", "")
                 .replaceAll("&", "");
-        boolean isLocal = cubicore.getConfig().getInt("chat.radius") > 0 && !legacyMessage.startsWith("!");
-        if (isLocal) {
-            int radius = cubicore.getConfig().getInt("chat.radius");
-            Set<Audience> viewers = event
-                    .viewers()
-                    .stream()
-                    .filter(it -> {
-                        if (!(it instanceof Player anotherPlayer)) return true;
-                        return anotherPlayer.getWorld() == player.getWorld() &&
-                                Math.abs(anotherPlayer.getLocation().getX() - player.getLocation().getX()) < radius &&
-                                Math.abs(anotherPlayer.getLocation().getZ() - player.getLocation().getZ()) < radius;
-                    })
-                    .collect(Collectors.toSet());
-            event.viewers().clear();
-            event.viewers().addAll(viewers);
-        }
-        else {
-            legacyMessage = legacyMessage.substring(1);
+        if (cubicore.getConfig().getInt("chat.radius") <= 0) {
+            boolean isLocal = !legacyMessage.startsWith("!");
+            if (isLocal) {
+                int radius = cubicore.getConfig().getInt("chat.radius");
+                Set<Audience> viewers = event
+                        .viewers()
+                        .stream()
+                        .filter(it -> {
+                            if (!(it instanceof Player anotherPlayer)) return true;
+                            return anotherPlayer.getWorld() == player.getWorld() &&
+                                    Math.abs(anotherPlayer.getLocation().getX() - player.getLocation().getX()) < radius &&
+                                    Math.abs(anotherPlayer.getLocation().getZ() - player.getLocation().getZ()) < radius;
+                        })
+                        .collect(Collectors.toSet());
+                event.viewers().clear();
+                event.viewers().addAll(viewers);
+            }
+            else {
+                legacyMessage = legacyMessage.substring(1);
+            }
         }
         Component endMessage = LegacyComponentSerializer
                 .legacyAmpersand()
