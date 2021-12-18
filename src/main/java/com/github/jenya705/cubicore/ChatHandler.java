@@ -5,11 +5,9 @@ import lombok.AllArgsConstructor;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.text.MessageFormat;
 import java.util.Set;
@@ -31,8 +29,13 @@ public class ChatHandler implements Listener {
                 .legacySection()
                 .serialize(event.message())
                 .replaceAll("\\{\\d}", "")
-                .replaceAll("&", "");
-        boolean isLocal = !legacyMessage.startsWith("!");
+                .replace("&", "");
+        if (legacyMessage.isEmpty()) {
+            event.setCancelled(true);
+            return;
+        }
+        boolean isLocal = !legacyMessage.startsWith("!") ||
+                cubicore.getConfig().getBoolean("chat.disableGlobal");
         if (cubicore.getConfig().getInt("chat.radius") > 0) {
             if (isLocal) {
                 int radius = cubicore.getConfig().getInt("chat.radius");
@@ -41,7 +44,7 @@ public class ChatHandler implements Listener {
                         .stream()
                         .filter(it -> {
                             if (!(it instanceof Player anotherPlayer)) return true;
-                            return anotherPlayer.getWorld() == player.getWorld() &&
+                            return anotherPlayer.getWorld().equals(player.getWorld()) &&
                                     Math.abs(anotherPlayer.getLocation().getX() - player.getLocation().getX()) < radius &&
                                     Math.abs(anotherPlayer.getLocation().getZ() - player.getLocation().getZ()) < radius;
                         })

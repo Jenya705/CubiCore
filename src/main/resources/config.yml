@@ -21,6 +21,10 @@ worlds:
 
 # chat formats
 chat:
+  # Disabling global chat
+  disableGlobal: false
+  # Chat formats
   global: "&7{2}&l< &r{0} &7{2}&l>&r {1}"
   local: "&7L {2}&l< &r{0} &7{2}&l>&r {1}"
+  # Local chat radius
   radius: 100
