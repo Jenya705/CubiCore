@@ -33,7 +33,7 @@ public class ChatHandler implements Listener {
                 .replaceAll("\\{\\d}", "")
                 .replaceAll("&", "");
         boolean isLocal = !legacyMessage.startsWith("!");
-        if (cubicore.getConfig().getInt("chat.radius") <= 0) {
+        if (cubicore.getConfig().getInt("chat.radius") > 0) {
             if (isLocal) {
                 int radius = cubicore.getConfig().getInt("chat.radius");
                 Set<Audience> viewers = event
@@ -51,6 +51,16 @@ public class ChatHandler implements Listener {
             }
             else {
                 legacyMessage = legacyMessage.substring(1);
+                int index = 0;
+                for (char c: legacyMessage.toCharArray()) {
+                    if (c != ' ') break;
+                    index++;
+                }
+                if (index == legacyMessage.length()) {
+                    event.setCancelled(true);
+                    return;
+                }
+                legacyMessage = legacyMessage.substring(index);
             }
         }
         else {
