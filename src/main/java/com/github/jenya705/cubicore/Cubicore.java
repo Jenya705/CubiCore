@@ -1,9 +1,13 @@
 package com.github.jenya705.cubicore;
 
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -16,7 +20,7 @@ public final class Cubicore extends JavaPlugin {
     private static Cubicore plugin;
 
     @Getter
-    private final Map<UUID, String> colors = new HashMap<>();
+    private final Map<UUID, TextColor> colors = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -39,6 +43,15 @@ public final class Cubicore extends JavaPlugin {
         if (pluginCommand == null) return;
         if (executor instanceof CommandExecutor) pluginCommand.setExecutor((CommandExecutor) executor);
         if (executor instanceof TabExecutor) pluginCommand.setTabCompleter((TabExecutor) executor);
+    }
+
+    public static Component buildPlayerComponent(Player player) {
+        return player
+                .displayName()
+                .hoverEvent(player)
+                .clickEvent(ClickEvent.clickEvent(
+                        ClickEvent.Action.SUGGEST_COMMAND, "/tell " + player.getName()
+                ));
     }
 
 }

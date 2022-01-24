@@ -4,12 +4,14 @@ import io.papermc.paper.event.player.AsyncChatEvent;
 import lombok.AllArgsConstructor;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import java.text.MessageFormat;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,12 +26,9 @@ public class ChatHandler implements Listener {
     @EventHandler
     public void chat(AsyncChatEvent event) {
         Player player = event.getPlayer();
-        String playerColor = cubicore.getColors().getOrDefault(player.getUniqueId(), "");
         String legacyMessage = LegacyComponentSerializer
                 .legacySection()
-                .serialize(event.message())
-                .replaceAll("\\{\\d}", "")
-                .replace("&", "");
+                .serialize(event.message());
         if (legacyMessage.isEmpty()) {
             event.setCancelled(true);
             return;
@@ -69,14 +68,21 @@ public class ChatHandler implements Listener {
         else {
             isLocal = false;
         }
-        Component endMessage = LegacyComponentSerializer
-                .legacyAmpersand()
-                .deserialize(MessageFormat.format(
-                        cubicore.getConfig().getString(isLocal ? "chat.local" : "chat.global"),
-                        player.getName(),
-                        legacyMessage,
-                        playerColor
-                ));
+        Component endMessage = Component.empty()
+                .append(Component
+                        .text(isLocal ? "L " : "")
+                        .color(NamedTextColor.GRAY)
+                )
+                .append(Cubicore.buildPlayerComponent(player))
+                .append(Component
+                        .text(" > ")
+                        .decorate(TextDecoration.BOLD)
+                        .color(Objects.requireNonNullElse(
+                                cubicore.getColors().get(player.getUniqueId()),
+                                NamedTextColor.GRAY
+                        ))
+                )
+                .append(Component.text(legacyMessage));
         event.renderer((source, sourceDisplayName, message, viewer) -> endMessage);
     }
 }
