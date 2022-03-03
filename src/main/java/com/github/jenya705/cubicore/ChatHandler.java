@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,6 +21,13 @@ import java.util.stream.Collectors;
  */
 @AllArgsConstructor
 public class ChatHandler implements Listener {
+
+    private static final LegacyComponentSerializer componentSerializer =
+            LegacyComponentSerializer
+                    .builder()
+                    .extractUrls()
+                    .character(ChatColor.COLOR_CHAR)
+                    .build();
 
     private final Cubicore cubicore;
 
@@ -82,7 +90,9 @@ public class ChatHandler implements Listener {
                                 NamedTextColor.GRAY
                         ))
                 )
-                .append(Component.text(legacyMessage));
+                .append(componentSerializer
+                        .deserialize(legacyMessage)
+                );
         event.renderer((source, sourceDisplayName, message, viewer) -> endMessage);
     }
 }
