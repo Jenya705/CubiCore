@@ -23,42 +23,12 @@ public class PlayerHandler implements Listener {
 
     @EventHandler
     public void quit(PlayerQuitEvent event) {
-        TextColor color = Objects.requireNonNullElse(
-                cubicore.getColors().remove(event.getPlayer().getUniqueId()),
-                NamedTextColor.GRAY
-        );
-        event.quitMessage(Component
-                .translatable("multiplayer.player.left")
-                .args(Component
-                        .empty()
-                        .color(color)
-                        .append(Component
-                                .text("< ")
-                                .decorate(TextDecoration.BOLD)
-                        )
-                        .append(Cubicore.buildPlayerComponent(event.getPlayer()))
-                )
-        );
+        event.quitMessage(Component.empty());
     }
 
     @EventHandler
     public void join(PlayerJoinEvent event) {
-        TextColor color = Objects.requireNonNullElse(
-                cubicore.getColors().get(event.getPlayer().getUniqueId()),
-                NamedTextColor.GRAY
-        );
-        event.joinMessage(Component
-                .translatable("multiplayer.player.joined")
-                .args(Component
-                        .empty()
-                        .color(color)
-                        .append(Component
-                                .text("> ")
-                                .decorate(TextDecoration.BOLD)
-                        )
-                        .append(Cubicore.buildPlayerComponent(event.getPlayer()))
-                )
-        );
+        event.joinMessage(Component.empty());
     }
 
 }
